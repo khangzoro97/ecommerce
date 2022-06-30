@@ -48,7 +48,7 @@ class ProductController extends Controller
         if($get_image){
             $get_name_image= current(explode('.',$get_image->getClientOriginalName()));
             $new_image= $get_name_image.rand(0,99).'.'.$get_image->getClientOriginalExtension();
-            $get_image->move('upload/product',$new_image);
+            $get_image->move('/../upload/product',$new_image);
             $product_image=$new_image;
         }
 
