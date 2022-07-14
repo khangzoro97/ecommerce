@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -26,7 +27,7 @@ class CategoryProduct extends Controller
 
     public function all_category_product(){
         $this->AuthLogin();
-        $tbl_category=DB::table('tbl_category_product')->get();
+        $tbl_category=DB::table('tbl_category_product')->orderBy('category_id','desc')->get();
         return view('admin.all_category_product',compact('tbl_category'));
     }
     public function save_category_product(Request $request){
@@ -35,13 +36,25 @@ class CategoryProduct extends Controller
         $category_product_decr= $request->category_product_decr;
         $category_status= $request->status;
 
-        DB::table('tbl_category_product')->insert([
-            "category_name"=>$category_product_name,
-            "category_desc"=>$category_product_decr,
-            "category_status"=>$category_status,
-        ]);
+        try {
+            DB::table('tbl_category_product')->insert([
+                "category_name" => $category_product_name,
+                "category_desc" => $category_product_decr,
+                "category_status" => $category_status,
+            ]);
+            $notification = array(
+                'message' => 'Thêm danh mục thành công!',
+                'alert-type' => 'success'
+            );
+        }catch (QueryException $ex){
+            $notification = array(
+                'message' => 'Sai! Vui lòng nhập lại',
+                'alert-type' => 'error'
+            );
+            return Redirect::back()->with($notification);
+        }
         Session::put('message','Thêm danh mục sản phẩm thành công!');
-        return Redirect::back();
+        return Redirect::back()->with($notification);
     }
     public function unactive_category_product($category_id){
         $this->AuthLogin();

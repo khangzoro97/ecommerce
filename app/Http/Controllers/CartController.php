@@ -25,7 +25,7 @@ class CartController extends Controller
         Cart::setGlobalTax(10);
 
         //add cart (id,name,quatity,price,weigt,image)
-        return Redirect::back();
+        return Redirect::to("show-cart");
     }
     public function show_cart(){
         return view('pages.cart.show_cart');

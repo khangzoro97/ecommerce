@@ -7,26 +7,14 @@
             </div>
             <div class="row w3-res-tb">
                 <div class="col-sm-5 m-b-xs">
-                    <select class="input-sm form-control w-sm inline v-middle">
-                        <option value="0">Bulk action</option>
-                        <option value="1">Delete selected</option>
-                        <option value="2">Bulk edit</option>
-                        <option value="3">Export</option>
-                    </select>
-                    <button class="btn btn-sm btn-default">Apply</button>
+                    <button class="btn btn-success dropdown-item" href="{{route('add_category_product')}}" data-remote="false"
+                            data-toggle="modal" data-target="#modal-admin-action-edit"><i class="fa fa-plus"> Thêm danh mục</i></button>
                 </div>
                 <div class="col-sm-4">
                 </div>
-                <div class="col-sm-3">
-                    <div class="input-group">
-                        <input type="text" class="input-sm form-control" placeholder="Search">
-                        <span class="input-group-btn">
-            <button class="btn btn-sm btn-default" type="button">Go!</button>
-          </span>
-                    </div>
-                </div>
+
             </div>
-            <div class="table-responsive">
+            <div class="table-responsive" style="overflow-x: hidden!important;">
                 <?php
                 use Illuminate\Support\Facades\Session;
                 $message= Session::get('message');
@@ -42,23 +30,21 @@
                     Session::put('message1',null);
                 }
                 ?>
-                <table class="table table-striped b-t b-light">
+                <table id="example1" class="table table-striped">
                     <thead>
                     <tr>
                         <th style="width:20px;">
-                            <label class="i-checks m-b-none">
-                                <input type="checkbox"><i></i>
-                            </label>
+                            STT
                         </th>
                         <th>Tên danh mục</th>
                         <th>Hiển thị</th>
-                        <th style="width:30px;"></th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($tbl_category as $key=>$value)
                     <tr>
-                        <td><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
+                        <td>{{$key+1}}</td>
                         <td>{{$value->category_name}}</td>
                         <td><span class="text-ellipsis">
                                 @if($value->category_status==0)
@@ -76,23 +62,40 @@
                     </tbody>
                 </table>
             </div>
-            <footer class="panel-footer">
-                <div class="row">
+        </div>
 
-                    <div class="col-sm-5 text-center">
-                        <small class="text-muted inline m-t-sm m-b-sm">showing 20-30 of 50 items</small>
+        <div class="modal fade" id="modal-admin-action-edit">
+            <div class="modal-dialog" style="max-width: 600px" >
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <h3 style="font-weight: bold" class="modal-title">Thêm danh mục sản phẩm</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        </button>
                     </div>
-                    <div class="col-sm-7 text-right text-center-xs">
-                        <ul class="pagination pagination-sm m-t-none m-b-none">
-                            <li><a href=""><i class="fa fa-chevron-left"></i></a></li>
-                            <li><a href="">1</a></li>
-                            <li><a href="">2</a></li>
-                            <li><a href="">3</a></li>
-                            <li><a href="">4</a></li>
-                            <li><a href=""><i class="fa fa-chevron-right"></i></a></li>
-                        </ul>
+                    <div class="modal-body">
+                    <form role="form" action="{{route('save_category_product')}}" method="post">
+                        @csrf
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Tên danh mục</label>
+                            <input type="text" name="category_product_name" class="form-control" id="exampleInputEmail1" placeholder="Tên danh mục" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Mô tả danh mục</label>
+                            <textarea style="resize: none" rows="5" class="form-control" name="category_product_decr" id="exampleInputPassword1" placeholder="Mô tả danh mục" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputFile">Hiển thị</label>
+                            <select name="status" class="form-control input-lg m-bot15" required>
+                                <option value="0">Ẩn</option>
+                                <option value="1" selected>Hiển thị</option>
+                            </select>
+                        </div>
+                        <button type="submit" name="add_category_product" class="btn btn-info">Thêm danh mục</button>
+                    </form>
                     </div>
                 </div>
-            </footer>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
         </div>
 @endsection

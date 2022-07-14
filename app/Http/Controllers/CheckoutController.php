@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\Request;
@@ -138,8 +139,15 @@ class CheckoutController extends Controller
             ->join('tbl_payment','tbl_order.payment_id','=','tbl_payment.payment_id')
             ->where('tbl_order.order_id','=',$order_id)
             ->get();
+        $order=DB::table('tbl_order')
+            ->join('customer','tbl_order.customer_id','=','customer.customer_id')
+            ->join('shipping','tbl_order.shipping_id','=','shipping.shipping_id')
+            ->join('tbl_order_detail','tbl_order.order_id','=','tbl_order_detail.order_id')
+            ->join('tbl_payment','tbl_order.payment_id','=','tbl_payment.payment_id')
+            ->where('tbl_order.order_id','=',$order_id)
+            ->first();
 
-        return view('admin.edit_order',compact('view_order'));
+        return view('admin.edit_order',compact('view_order','order_id','order'));
     }
     public function delete_order($order_id){
         $this->AuthLogin();
@@ -151,4 +159,28 @@ class CheckoutController extends Controller
         Session::put('message','Xoá đơn hàng thành công!!');
         return Redirect::back();
     }
+
+    public function print_order($order_id){
+        $page= "receipt.pdf";
+        $view_order=DB::table('tbl_order')
+            ->join('customer','tbl_order.customer_id','=','customer.customer_id')
+            ->join('shipping','tbl_order.shipping_id','=','shipping.shipping_id')
+            ->join('tbl_order_detail','tbl_order.order_id','=','tbl_order_detail.order_id')
+            ->join('tbl_payment','tbl_order.payment_id','=','tbl_payment.payment_id')
+            ->where('tbl_order.order_id','=',$order_id)
+            ->get();
+        $order=DB::table('tbl_order')
+            ->join('customer','tbl_order.customer_id','=','customer.customer_id')
+            ->join('shipping','tbl_order.shipping_id','=','shipping.shipping_id')
+            ->join('tbl_order_detail','tbl_order.order_id','=','tbl_order_detail.order_id')
+            ->join('tbl_payment','tbl_order.payment_id','=','tbl_payment.payment_id')
+            ->where('tbl_order.order_id','=',$order_id)
+            ->first();
+        $now= Carbon::now('Asia/Ho_Chi_Minh')->toDateTimeString();
+
+        $pdf = PDF::loadView('admin.receipt',compact('view_order','now','order'))
+            ->setPaper('a4', 'landscape');
+        return $pdf->stream($page);
+    }
+
 }

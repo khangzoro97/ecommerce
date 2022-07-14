@@ -60,6 +60,7 @@
                             <td >
                             </td>
                         </tr>
+                    @endforeach
                         <tr>
                             <td colspan="4">&nbsp;</td>
                             <td colspan="2">
@@ -83,7 +84,7 @@
                                 </table>
                             </td>
                         </tr>
-                    @endforeach
+
                     </tbody>
                 </table>
             </div>

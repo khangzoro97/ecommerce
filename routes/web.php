@@ -95,6 +95,7 @@ Route::get('/delete-product/{product_id}', 'ProductController@delete_product')->
 Route::get('/manage-order', 'CheckoutController@manage_order')->name('manage_order');
 Route::get('/view-order/{order_id}', 'CheckoutController@view_order')->name('view_order');
 Route::get('/delete-order/{order_id}', 'CheckoutController@delete_order')->name('delete_order');
+Route::get('/print-order/{order_id}', 'CheckoutController@print_order')->name('print_order');
 
 //Delivery
 Route::get('/delivery', 'DeliveryController@delivery');
